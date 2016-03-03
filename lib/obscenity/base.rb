@@ -61,8 +61,13 @@ module Obscenity
       end
 
       private
-      def end_word_boundary
-        '(?=_|\z|\s|-|\.|\?|\!|,|:|;|&|"|\')'
+      def end_word_boundary(term)
+        if /\b\z/ =~ term
+          '(?=_|\b)'
+        else
+          '(?=_|\z|\s|-|\.|\?|\!|,|:|;|&|"|\'|\(|\))'
+        end
+
       end
 
       def set_list_content(list)
@@ -73,12 +78,16 @@ module Obscenity
         end
       end
 
-      def start_word_boundary
-        '(?<=_|\A|\s|-|\.|\?|\!|,|:|;|&|"|\')'
+      def start_word_boundary(term)
+        if /\A\b/ =~ term
+          '(?<=_|\b)'
+        else
+          '(?<=_|\A|\s|-|\.|\?|\!|,|:|;|&|"|\'|\(|\))'
+        end
       end
 
       def term_regex(foul)
-        /#{start_word_boundary}#{Regexp.escape(foul)}#{end_word_boundary}/i
+        /#{start_word_boundary(foul)}#{Regexp.escape(foul)}#{end_word_boundary(foul)}/i
       end
     end
   end

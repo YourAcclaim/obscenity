@@ -56,7 +56,7 @@ class TestBase < Test::Unit::TestCase
           assert !Obscenity::Base.profane?('hello')
         end
 
-        should "validate the profanity of a word based on underscore, hyphen, space, and punctuation boundaries" do
+        should "validate the profanity of a word based on underscore, hyphen, space, and punctuation boundaries if word does not start/end with word boundary" do
           assert Obscenity::Base.profane?('_as$_')
           assert Obscenity::Base.profane?('-as$-')
           assert Obscenity::Base.profane?(' as$ ')
@@ -72,6 +72,11 @@ class TestBase < Test::Unit::TestCase
           assert Obscenity::Base.profane?(':as$:')
           assert Obscenity::Base.profane?(';as$;')
           refute Obscenity::Base.profane?('as$ent')
+        end
+
+        should "validate the profanity of a word using word boundaries if word has such boundaries" do
+          assert Obscenity::Base.profane?('$shit$')
+          refute Obscenity::Base.profane?('as$$')
         end
 
         should "validate the profanity of multiple words based on the default list" do

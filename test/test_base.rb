@@ -51,6 +51,7 @@ class TestBase < Test::Unit::TestCase
         }
         should "validate the profanity of a word based on the default list" do
           assert Obscenity::Base.profane?('ass')
+          assert Obscenity::Base.profane?('as$')
           assert Obscenity::Base.profane?('biatch')
           assert !Obscenity::Base.profane?('hello')
         end

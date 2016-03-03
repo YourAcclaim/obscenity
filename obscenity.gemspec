@@ -64,6 +64,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<activemodel>, ["~> 3.0"])
       s.add_development_dependency(%q<rack>, [">= 0"])
       s.add_development_dependency(%q<rake>, [">= 0"])
+      s.add_development_dependency(%q<test-unit>, ["~> 2.0"])
     else
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])

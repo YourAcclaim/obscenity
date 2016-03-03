@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-ruby '2.2.2'
+ruby '2.3.0'
 
 group :development do
   gem "shoulda", ">= 0"
@@ -10,4 +10,5 @@ group :development do
   gem "activemodel", "~> 3.0"
   gem "rack"
   gem "rake"
+  gem "test-unit"
 end

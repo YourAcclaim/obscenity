@@ -51,9 +51,27 @@ class TestBase < Test::Unit::TestCase
         }
         should "validate the profanity of a word based on the default list" do
           assert Obscenity::Base.profane?('ass')
-          assert Obscenity::Base.profane?('as$')
+          assert Obscenity::Base.profane?('as$ foo')
           assert Obscenity::Base.profane?('biatch')
           assert !Obscenity::Base.profane?('hello')
+        end
+
+        should "validate the profanity of a word based on underscore, hyphen, space, and punctuation boundaries" do
+          assert Obscenity::Base.profane?('_as$_')
+          assert Obscenity::Base.profane?('-as$-')
+          assert Obscenity::Base.profane?(' as$ ')
+          assert Obscenity::Base.profane?("\tas$\t")
+          assert Obscenity::Base.profane?("\nas$\n")
+          assert Obscenity::Base.profane?('.as$.')
+          assert Obscenity::Base.profane?('!as$!')
+          assert Obscenity::Base.profane?('?as$?')
+          assert Obscenity::Base.profane?("'as$'")
+          assert Obscenity::Base.profane?('"as$"')
+          assert Obscenity::Base.profane?('&as$&')
+          assert Obscenity::Base.profane?(',as$,')
+          assert Obscenity::Base.profane?(':as$:')
+          assert Obscenity::Base.profane?(';as$;')
+          refute Obscenity::Base.profane?('as$ent')
         end
 
         should "validate the profanity of multiple words based on the default list" do

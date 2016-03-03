@@ -21,7 +21,7 @@ module Obscenity
       def profane?(text)
         return(false) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          return(true) if text =~ /(_|\b|\A)#{Regexp.escape(foul)}(_|\b|\z)/i && !whitelist.include?(foul)
+          return(true) if text =~ term_regex(foul) && !whitelist.include?(foul)
         end
         false
       end
@@ -29,7 +29,7 @@ module Obscenity
       def sanitize(text)
         return(text) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          text.gsub!(/\b#{foul}\b/i, replace(foul)) unless whitelist.include?(foul)
+          text.gsub!(term_regex(foul), replace(foul)) unless whitelist.include?(foul)
         end
         @scoped_replacement = nil
         text
@@ -44,7 +44,7 @@ module Obscenity
         words = []
         return(words) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          words << foul if text =~ /\b#{foul}\b/i && !whitelist.include?(foul)
+          words << foul if text =~ term_regex(foul) && !whitelist.include?(foul)
         end
         words.uniq
       end
@@ -61,6 +61,10 @@ module Obscenity
       end
 
       private
+      def end_word_boundary
+        '(?=_|\z|\s|-|\.|\?|\!|,|:|;|&|"|\')'
+      end
+
       def set_list_content(list)
         case list
         when Array then list
@@ -69,6 +73,13 @@ module Obscenity
         end
       end
 
+      def start_word_boundary
+        '(?<=_|\A|\s|-|\.|\?|\!|,|:|;|&|"|\')'
+      end
+
+      def term_regex(foul)
+        /#{start_word_boundary}#{Regexp.escape(foul)}#{end_word_boundary}/i
+      end
     end
   end
 end

@@ -8,6 +8,13 @@ module Obscenity
 
       def blacklist=(value)
         @blacklist = value == :default ? set_list_content(Obscenity::Config.new.blacklist) : value
+        @blacklist_regexes = nil
+      end
+
+      def blacklist_regexes
+        @blacklist_regexes ||= blacklist.each_with_object([]) do |foul, result|
+          result << term_regex(foul) unless whitelist.include?(foul)
+        end
       end
 
       def whitelist
@@ -20,8 +27,8 @@ module Obscenity
 
       def profane?(text)
         return(false) unless text.to_s.size >= 3
-        blacklist.each do |foul|
-          return(true) if text =~ term_regex(foul) && !whitelist.include?(foul)
+        blacklist_regexes.each do |foul|
+          return(true) if text =~ foul
         end
         false
       end
